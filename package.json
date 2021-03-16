@@ -1,0 +1,37 @@
+{
+  "name": "homebridge-enet",
+  "version": "1.0.0",
+  "description": "ENet implementation for Apple HomeKit",
+  "main": "dist/dynamic-platform.js",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "build": "rm -rf ./dist && tsc"
+  },
+  "author": "Lawrence Bensaid <lawrencebensaid@icloud.com>",
+  "engines": {
+    "homebridge": ">=1.0.0"
+  },
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lawrencebensaid/homebridge-enet.git"
+  },
+  "bugs": {
+    "url": "http://github.com/lawrencebensaid/homebridge-enet/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^10.17.19",
+    "homebridge": "^1.3.3",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.9.9"
+  },
+  "dependencies": {
+    "enet-api": "^1.2.1",
+    "request": "^2.88.2"
+  }
+}
