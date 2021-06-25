@@ -1,6 +1,6 @@
 {
   "name": "homebridge-enet",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ENet implementation for Apple HomeKit",
   "main": "dist/dynamic-platform.js",
   "scripts": {
