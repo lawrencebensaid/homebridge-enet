@@ -1,6 +1,6 @@
 # eNet Homebridge plugin
 
-The accessories added to eNet smart home will automatically appear in the Apple Home app if the below configuratino is correct.
+The accessories added to eNet smart home will automatically appear in the Apple Home app if the below configuration is correct.
 
 ## Configuration
 
@@ -14,3 +14,7 @@ The accessories added to eNet smart home will automatically appear in the Apple 
 }
 
 ```
+
+# NOTE
+
+THIS IS NOT A MAINTAINED REPO. IF YOU REQUIRE A CHANGE PLEASE SUBMIT A PR.
