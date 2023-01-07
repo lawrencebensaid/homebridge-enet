@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
+    "target": "ES2020",
     "module": "commonjs",
     "lib": [
       "ES2015",
@@ -14,9 +14,18 @@
 
     "strict": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true, 
+    "noImplicitAny": false
   },
   "include": [
-    "src"
+    "src/*",
+     "typings.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "./node_modules",
+    "./node_modules/*",
+    "./node_modules/@types/node/index.d.ts",
+    "./node_modules/hap-nodejs/dist/lib/Characteristic.d.ts"
   ]
 }

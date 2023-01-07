@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 const enet_api_1 = require("enet-api");
+const enet_api_2 = require("enet-api");
 const fs_1 = __importDefault(require("fs"));
 const { version } = require("../package.json");
 const PLUGIN_NAME = "homebridge-enet";
@@ -27,8 +28,8 @@ class ENetPlatform {
         }
         catch (error) { }
         if (token === null) {
-            this.enet = new enet_api_1.ENet(config.host);
             this.log.info("Authentication needed!");
+            this.enet = new enet_api_1.ENet(config.host);
             this.enet.authenticate(this.config.username, this.config.password)
                 .then((token) => {
                 fs_1.default.writeFileSync(path, JSON.stringify({ token }), { encoding: "utf8" });
@@ -39,7 +40,9 @@ class ENetPlatform {
             });
         }
         else {
+            this.log.info("No need to reauth, we have token!");
             this.enet = new enet_api_1.ENet(config.host, token);
+            this.config.token = token;
             this.setupNow();
         }
         // Handle polling
@@ -53,16 +56,21 @@ class ENetPlatform {
     setupNow() {
         return new Promise(async (resolve, reject) => {
             try {
-                const devices = await this.enet.getDevices();
+                // const devices = await this.enet.getDevices();
+                console.log('setupNow()....');
+                // console.log(this.config)
+                const client = new enet_api_2.ENetClient(this.config.host, this.config.token);
+                const devices = await client.getDevicesWithParameterFilter();
                 this.log.info(devices);
                 for (let device of devices) {
-                    const uuid = device.deviceUID.toLowerCase();
-                    delete device.deviceUID;
+                    const uuid = device.uid.toLowerCase();
+                    delete device.uid;
                     this.devices[uuid] = device;
                     this.devices[uuid].state = null;
                     if (!this.accessories.find(accessory => accessory.UUID === uuid)) {
-                        const accessory = new this.api.platformAccessory(device.locationName, uuid);
-                        accessory.addService(hap.Service.Switch, device.locationName);
+                        const accessory = new this.api.platformAccessory(device.installationArea, uuid);
+                        accessory.addService(hap.Service.Switch, device.installationArea);
+                        // accessory.displayName = device.installationArea+'_'+device.typeID+' '+device.metaData.serialNumber;
                         this.accessories.push(accessory);
                         this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
                     }
@@ -85,7 +93,7 @@ class ENetPlatform {
         (async () => {
             this.log.info(`Configuring '${accessory.UUID}'`);
             const device = await this.enet.getDeviceInfo(accessory.UUID);
-            accessory.on("identify" /* IDENTIFY */, () => {
+            accessory.on("identify" /* PlatformAccessoryEvent.IDENTIFY */, () => {
                 this.log(`${accessory.displayName} identified!`);
             });
             const info = accessory.getService(hap.Service.AccessoryInformation);
@@ -101,7 +109,7 @@ class ENetPlatform {
                 .getService(hap.Service.Switch);
             service
                 .getCharacteristic(hap.Characteristic.On)
-                .on("set" /* SET */, async (value, callback) => {
+                .on("set" /* CharacteristicEventTypes.SET */, async (value, callback) => {
                 try {
                     await this.enet.setDevicePrimaryState(accessory.UUID, value);
                     callback();
@@ -112,7 +120,7 @@ class ENetPlatform {
             });
             service
                 .getCharacteristic(hap.Characteristic.On)
-                .on("get" /* GET */, (callback) => {
+                .on("get" /* CharacteristicEventTypes.GET */, (callback) => {
                 const device = this.devices[accessory.UUID.toLowerCase()];
                 if (device) {
                     callback(null, this.devices[accessory.UUID].state === true);

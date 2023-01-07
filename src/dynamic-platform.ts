@@ -1,4 +1,5 @@
 import { ENet } from "enet-api";
+import { ENetClient } from "enet-api";
 import fs from "fs";
 import {
   API,
@@ -34,6 +35,7 @@ class ENetPlatform implements DynamicPlatformPlugin {
   private readonly api: API;
   private readonly config: PlatformConfig;
   private enet: ENet;
+  private enetClient: ENetClient;
 
   private readonly accessories: PlatformAccessory[] = [];
   private devices: { [id: string]: any } = {};
@@ -55,8 +57,8 @@ class ENetPlatform implements DynamicPlatformPlugin {
     } catch (error) { }
 
     if (token === null) {
-      this.enet = new ENet(config.host);
       this.log.info("Authentication needed!");
+      this.enet = new ENet(config.host);
       this.enet.authenticate(this.config.username, this.config.password)
         .then((token: string) => {
           fs.writeFileSync(path, JSON.stringify({ token }), { encoding: "utf8" });
@@ -66,7 +68,9 @@ class ENetPlatform implements DynamicPlatformPlugin {
           this.log.error(error.message);
         })
     } else {
+      this.log.info("No need to reauth, we have token!");
       this.enet = new ENet(config.host, token);
+      this.config.token = token;
       this.setupNow();
     }
 
@@ -83,25 +87,30 @@ class ENetPlatform implements DynamicPlatformPlugin {
   setupNow() {
     return new Promise<void>(async (resolve, reject) => {
       try {
-        const devices = await this.enet.getDevices();
+        // const devices = await this.enet.getDevices();
+        console.log('setupNow()....')
+        // console.log(this.config)
+        const client = new ENetClient(this.config.host, this.config.token);
+        const devices = await client.getDevicesWithParameterFilter();
 
         this.log.info(devices);
 
         for (let device of devices) {
-          const uuid = device.deviceUID.toLowerCase();
-          delete device.deviceUID;
+          const uuid = device.uid.toLowerCase();
+          delete device.uid;
           this.devices[uuid] = device;
           this.devices[uuid].state = null;
           if (!this.accessories.find(accessory => accessory.UUID === uuid)) {
-            const accessory = new this.api.platformAccessory(device.locationName, uuid);
-            accessory.addService(hap.Service.Switch, device.locationName);
+            const accessory = new this.api.platformAccessory(device.installationArea, uuid);
+            accessory.addService(hap.Service.Switch, device.installationArea);
+            // accessory.displayName = device.installationArea+'_'+device.typeID+' '+device.metaData.serialNumber;
             this.accessories.push(accessory);
             this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
           }
         }
 
         resolve();
-      } catch (error) {
+      } catch (error: any) {
         reject(error.message);
       }
 
@@ -150,7 +159,7 @@ class ENetPlatform implements DynamicPlatformPlugin {
           try {
             await this.enet.setDevicePrimaryState(accessory.UUID, value);
             callback();
-          } catch (error) {
+          } catch (error: any) {
             this.log.info(error.message);
           }
 
