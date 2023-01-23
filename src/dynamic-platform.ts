@@ -55,7 +55,7 @@ class ENetPlatform implements DynamicPlatformPlugin {
     } catch (error) { }
 
     if (token === null) {
-      this.enet = new ENet(config.host);
+      this.enet = new ENet['default'](config.host);
       this.log.info("Authentication needed!");
       this.enet.authenticate(this.config.username, this.config.password)
         .then((token: string) => {
@@ -66,7 +66,7 @@ class ENetPlatform implements DynamicPlatformPlugin {
           this.log.error(error.message);
         })
     } else {
-      this.enet = new ENet(config.host, token);
+      this.enet = new ENet['default'](config.host, token);
       this.setupNow();
     }
 

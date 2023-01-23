@@ -1,8 +1,8 @@
 {
   "name": "homebridge-enet",
-  "displayName": "Homebridge e-Net",
-  "version": "1.0.1",
-  "description": "ENet implementation for Apple HomeKit",
+  "displayName": "Homebridge eNet",
+  "version": "1.1.0",
+  "description": "eNet implementation for Apple HomeKit",
   "main": "dist/dynamic-platform.js",
   "scripts": {
     "clean": "rm -rf ./dist",
@@ -32,7 +32,7 @@
     "typescript": "^3.9.9"
   },
   "dependencies": {
-    "enet-api": "^1.2.1",
+    "enet-api": "^1.3.0",
     "request": "^2.88.2"
   }
 }

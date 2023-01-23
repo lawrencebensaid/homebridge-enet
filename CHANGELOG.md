@@ -1,3 +1,11 @@
+## v1.1.0
+
+**Added config schema**
+
+**Fixed `ENet is not a constructor` error**
+
+**Bumped `enet-api` dependency**
+
 ## v1.0.1
 
 **Added built dist folder to source control**

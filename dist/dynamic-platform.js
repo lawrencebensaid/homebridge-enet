@@ -27,7 +27,7 @@ class ENetPlatform {
         }
         catch (error) { }
         if (token === null) {
-            this.enet = new enet_api_1.ENet(config.host);
+            this.enet = new enet_api_1.ENet['default'](config.host);
             this.log.info("Authentication needed!");
             this.enet.authenticate(this.config.username, this.config.password)
                 .then((token) => {
@@ -39,7 +39,7 @@ class ENetPlatform {
             });
         }
         else {
-            this.enet = new enet_api_1.ENet(config.host, token);
+            this.enet = new enet_api_1.ENet['default'](config.host, token);
             this.setupNow();
         }
         // Handle polling

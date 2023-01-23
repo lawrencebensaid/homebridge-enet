@@ -1,0 +1,27 @@
+{
+  "pluginAlias": "eNet",
+  "pluginType": "platform",
+  "singular": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "username": {
+        "title": "Username",
+        "type": "string",
+        "required": true,
+        "default": "admin"
+      },
+      "password": {
+        "title": "Password",
+        "type": "string",
+        "required": true,
+        "default": "admin"
+      },
+      "host": {
+        "title": "Host",
+        "type": "string",
+        "required": true
+      }
+    }
+  }
+}
