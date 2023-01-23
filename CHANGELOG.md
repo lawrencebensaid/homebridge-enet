@@ -1,6 +1,8 @@
-## v1.1.0
+## v1.2.0
 
 **Added config schema**
+
+## v1.1.0
 
 **Fixed `ENet is not a constructor` error**
 
