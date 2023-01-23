@@ -2,6 +2,8 @@
   "pluginAlias": "eNet",
   "pluginType": "platform",
   "singular": true,
+  "headerDisplay": "eNet smart home integration for Apple HomeKit using Homebridge.",
+  "footerDisplay": "The accessories added to eNet smart home will automatically appear in the Apple Home app if the above configuration is correct.",
   "schema": {
     "type": "object",
     "properties": {
